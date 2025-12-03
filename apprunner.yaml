@@ -1,0 +1,16 @@
+version: 1.0
+runtime: go
+build:
+  commands:
+    build:
+    - go mod init proxy
+    - go build -o proxy main.go
+run:
+  runtime-version: '1.23'
+  command: ./proxy
+  network:
+    port: 8080
+    env: PORT
+  env:
+    - name: PORT
+      value: "8080"
