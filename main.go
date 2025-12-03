@@ -22,7 +22,6 @@ func handleClient(clientConn net.Conn, targetAddr string) {
     }
     defer remoteConn.Close()
 
-    // Client -> Remote (в фоне)
     go func() {
         _, err := io.Copy(remoteConn, clientConn)
         if err != nil {
@@ -31,7 +30,6 @@ func handleClient(clientConn net.Conn, targetAddr string) {
         remoteConn.Close()
     }()
 
-    // Remote -> Client
     _, err = io.Copy(clientConn, remoteConn)
     if err != nil {
         log.Printf("Remote->Client copy error: %v", err)
@@ -43,12 +41,12 @@ func main() {
     if port == "" {
         port = "8080"
     }
-    
+
     listenAddr := ":" + port
     targetAddr := V2RAY_SERVER_IP + ":" + TARGET_PORT
-    
-    log.Printf("Starting proxy server: %s -> %s:%s", listenAddr, V2RAY_SERVER_IP, TARGET_PORT)
-    
+
+    log.Printf("Starting proxy server: %s -> %s", listenAddr, targetAddr)
+
     listener, err := net.Listen("tcp", listenAddr)
     if err != nil {
         log.Fatal("Failed to listen:", err)
@@ -56,7 +54,7 @@ func main() {
     defer listener.Close()
 
     log.Println("Proxy server started successfully")
-    
+
     for {
         clientConn, err := listener.Accept()
         if err != nil {
