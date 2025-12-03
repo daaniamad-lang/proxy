@@ -1,10 +1,10 @@
 version: 1.0
-runtime: go
+auto-deployments-enabled: true
+runtime: custom
 build:
   commands:
     build:
-    - go mod init proxy
-    - go build -o proxy main.go
+    - docker build -t proxy-app .
 run:
   command: ./proxy
   network:
