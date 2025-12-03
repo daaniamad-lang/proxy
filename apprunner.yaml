@@ -1,5 +1,4 @@
 version: 1.0
-auto-deployments-enabled: true
 runtime: custom
 build:
   commands:
@@ -7,9 +6,7 @@ build:
     - docker build -t proxy-app .
 run:
   command: ./proxy
-  network:
-    port: 8080
-    env: PORT
+  port: 8080
   env:
     - name: PORT
       value: "8080"
