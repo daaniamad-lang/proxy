@@ -6,10 +6,18 @@ import (
     "os"
 )
 
+const (
+    V2RAY_SERVER_IP = "62.133.63.108"  // Замените на ваш IP
+    TARGET_PORT     = "80"
+)
+
 func handleClient(clientConn net.Conn, targetAddr string) {
     defer clientConn.Close()
 
-    remoteConn, _ := net.Dial("tcp", targetAddr)
+    remoteConn, err := net.Dial("tcp", targetAddr)
+    if err != nil {
+        return
+    }
     defer remoteConn.Close()
 
     go func() {
@@ -20,9 +28,17 @@ func handleClient(clientConn net.Conn, targetAddr string) {
 }
 
 func main() {
-    listenAddr := ":" + os.Getenv("PORT")
-    targetAddr := os.Getenv("V2RAY_SERVER_IP") + ":80"
-    listener, _ := net.Listen("tcp", listenAddr)
+    port := os.Getenv("PORT")
+    if port == "" {
+        port = "8080"
+    }
+    listenAddr := ":" + port
+    targetAddr := V2RAY_SERVER_IP + ":" + TARGET_PORT
+    
+    listener, err := net.Listen("tcp", listenAddr)
+    if err != nil {
+        panic(err)
+    }
     defer listener.Close()
 
     for {
