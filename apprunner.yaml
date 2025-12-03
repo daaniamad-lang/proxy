@@ -6,7 +6,6 @@ build:
     - go mod init proxy
     - go build -o proxy main.go
 run:
-  runtime-version: '1.23'
   command: ./proxy
   network:
     port: 8080
